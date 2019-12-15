@@ -23,7 +23,17 @@ public class Field extends JPanel {
         repaintTimer.start();
     }
 
-    
+    public void paintComponent(Graphics g){
+        super.paintComponent(g);
+        Graphics2D canvas = (Graphics2D) g;
+        for (BouncingBall ball : balls){
+            ball.paint(canvas);
+        }
+    }
+
+    public void addBall() {
+        balls.add(new BouncingBall(this));
+    }
 
 
 }
