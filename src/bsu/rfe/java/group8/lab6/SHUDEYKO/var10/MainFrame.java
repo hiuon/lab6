@@ -10,10 +10,12 @@ public class MainFrame extends JFrame {
 
     private JMenuItem pauseMenuItem;
     private JMenuItem resumeMenuItem;
+    private JMenuItem frictionOnMenuItem;
+    private JMenuItem frictionOffMenuItem;
 
     private Field field = new Field();
 
-    public MainFrame(){
+    public MainFrame(String F){
         super("Программирование и синхронизация потоков");
         setSize(WIDTH, HEIGHT);
         Toolkit kit = Toolkit.getDefaultToolkit();
@@ -26,9 +28,11 @@ public class MainFrame extends JFrame {
         Action addBallAction = new AbstractAction("Добавить мяч") {
             public void actionPerformed(ActionEvent event) {
                 field.addBall();
-                if (!pauseMenuItem.isEnabled() &&
-                        !resumeMenuItem.isEnabled()) {
+                if (!pauseMenuItem.isEnabled() && !resumeMenuItem.isEnabled()) {
                     pauseMenuItem.setEnabled(true);
+                }
+                if (!frictionOffMenuItem.isEnabled() && !frictionOnMenuItem.isEnabled()) {
+                    frictionOnMenuItem.setEnabled(true);
                 }
             }
         };
@@ -36,6 +40,26 @@ public class MainFrame extends JFrame {
         ballMenu.add(addBallAction);
         JMenu controlMenu = new JMenu("Управление");
         menuBar.add(controlMenu);
+        Action frictionOnAction = new AbstractAction("Включить трение"){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //метод включения трения
+                frictionOnMenuItem.setEnabled(false);
+                frictionOffMenuItem.setEnabled(true);
+            }
+        };
+        frictionOnMenuItem = controlMenu.add(frictionOnAction);
+        frictionOnMenuItem.setEnabled(false);
+        Action frictionOffAction = new AbstractAction("Выключить трение"){
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //метод выключения трения
+                frictionOffMenuItem.setEnabled(false);
+                frictionOnMenuItem.setEnabled(true);
+            }
+        };
+        frictionOffMenuItem = controlMenu.add(frictionOffAction);
+        frictionOffMenuItem.setEnabled(false);
         Action pauseAction = new AbstractAction("Приостановить движение"){
             public void actionPerformed(ActionEvent event) {
                 field.pause();
@@ -54,12 +78,16 @@ public class MainFrame extends JFrame {
         };
         resumeMenuItem = controlMenu.add(resumeAction);
         resumeMenuItem.setEnabled(false);
-// Добавить в центр граничной компоновки поле Field
         getContentPane().add(field, BorderLayout.CENTER);
     }
 
     public static void main(String[] args){
-        MainFrame frame = new MainFrame();
+        String friction = "";
+        if (args.length != 0){
+            friction = args[0];
+        }
+
+        MainFrame frame = new MainFrame(friction);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

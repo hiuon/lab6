@@ -19,6 +19,8 @@ public class BouncingBall implements Runnable {
     private double speedX;
     private double speedY;
     private int speed;
+    private boolean fOn = false;
+    private double friction;
 
     public BouncingBall(Field field){
         this.field = field;
@@ -54,25 +56,50 @@ public class BouncingBall implements Runnable {
     public void run() {
         try{
             while(true){
-                field.canMove(this);
-                if (x + speedX <= radius) {
-                    speedX = -speedX;
-                    x = radius;
-                } else
-                if (x + speedX >= field.getWidth() - radius) {
-                    speedX = -speedX;
-                    x=new Double(field.getWidth()-radius).intValue();
-                } else
-                if (y + speedY <= radius) {
-                    speedY = -speedY;
-                    y = radius;
-                } else
-                if (y + speedY >= field.getHeight() - radius) {
-                    speedY = -speedY;
-                    y=new Double(field.getHeight()-radius).intValue();
-                } else {
-                    x += speedX;
-                    y += speedY;
+                if (fOn){
+                    if (Math.abs(speedX) > 1e-5 || Math.abs(speedY) > 1e-5) {
+                        field.canMove(this);
+                        if (x + speedX <= radius) {
+                            speedX = -speedX*friction;
+                            x = radius;
+                        } else if (x + speedX >= field.getWidth() - radius) {
+                            speedX = -speedX*friction;
+                            x = new Double(field.getWidth() - radius).intValue();
+                        } else if (y + speedY <= radius) {
+                            speedY = -speedY*friction;
+                            y = radius;
+                        } else if (y + speedY >= field.getHeight() - radius) {
+                            speedY = -speedY*friction;
+                            y = new Double(field.getHeight() - radius).intValue();
+                        } else {
+                            x += speedX*friction;
+                            y += speedY*friction;
+                        }
+                    }
+                    else {
+                        field.canMove(this);
+                        speedX = 0.0;
+                        speedY = 0.0;
+                    }
+                }
+                else {
+                    field.canMove(this);
+                    if (x + speedX <= radius) {
+                        speedX = -speedX;
+                        x = radius;
+                    } else if (x + speedX >= field.getWidth() - radius) {
+                        speedX = -speedX;
+                        x = new Double(field.getWidth() - radius).intValue();
+                    } else if (y + speedY <= radius) {
+                        speedY = -speedY;
+                        y = radius;
+                    } else if (y + speedY >= field.getHeight() - radius) {
+                        speedY = -speedY;
+                        y = new Double(field.getHeight() - radius).intValue();
+                    } else {
+                        x += speedX;
+                        y += speedY;
+                    }
                 }
                 Thread.sleep(16 - speed);
             }
