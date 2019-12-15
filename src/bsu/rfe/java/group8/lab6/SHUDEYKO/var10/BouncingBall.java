@@ -22,8 +22,9 @@ public class BouncingBall implements Runnable {
     private boolean fOn = false;
     private double friction;
 
-    public BouncingBall(Field field){
+    public BouncingBall(Field field, double friction){
         this.field = field;
+        this.friction = friction;
         this.radius = new Double(Math.random()*(MAX_RADIUS-MIN_RADIUS)).intValue() + MIN_RADIUS;
         this.speed = new Double(Math.round(5*MAX_SPEED/radius)).intValue();
         if (speed > MAX_SPEED){
@@ -39,6 +40,10 @@ public class BouncingBall implements Runnable {
         Thread thisThread = new Thread(this);
         thisThread.start();
 
+    }
+
+    public void setFriction(boolean F){
+        fOn = F;
     }
 
     public void paint(Graphics2D canvas) {

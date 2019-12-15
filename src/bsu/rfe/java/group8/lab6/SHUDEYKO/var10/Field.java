@@ -10,6 +10,8 @@ import javax.swing.Timer;
 public class Field extends JPanel {
 
     private boolean paused;
+    private boolean fOn;
+    private double friction;
     private ArrayList<BouncingBall> balls = new ArrayList<>(10);
     private Timer repaintTimer = new Timer(10, new ActionListener() {
         @Override
@@ -23,6 +25,22 @@ public class Field extends JPanel {
         repaintTimer.start();
     }
 
+    public void setFriction(double F){
+        this.friction = F;
+    }
+
+    public void enableF(){
+        for (BouncingBall ball : balls){
+            ball.setFriction(true);
+        }
+    }
+
+    public void disableF(){
+        for (BouncingBall ball : balls){
+            ball.setFriction(false);
+        }
+    }
+
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D canvas = (Graphics2D) g;
@@ -32,7 +50,7 @@ public class Field extends JPanel {
     }
 
     public void addBall() {
-        balls.add(new BouncingBall(this));
+        balls.add(new BouncingBall(this, friction));
     }
 
     public synchronized void pause(){

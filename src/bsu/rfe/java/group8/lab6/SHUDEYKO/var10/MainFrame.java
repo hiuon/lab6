@@ -21,6 +21,7 @@ public class MainFrame extends JFrame {
         Toolkit kit = Toolkit.getDefaultToolkit();
         setLocation((kit.getScreenSize().width - WIDTH)/2, (kit.getScreenSize().height - HEIGHT)/2);
 
+        field.setFriction(Double.parseDouble(F));
         setExtendedState(MAXIMIZED_BOTH);
         JMenuBar menuBar = new JMenuBar();
         setJMenuBar(menuBar);
@@ -43,7 +44,7 @@ public class MainFrame extends JFrame {
         Action frictionOnAction = new AbstractAction("Включить трение"){
             @Override
             public void actionPerformed(ActionEvent e) {
-                //метод включения трения
+                field.enableF();
                 frictionOnMenuItem.setEnabled(false);
                 frictionOffMenuItem.setEnabled(true);
             }
@@ -53,7 +54,7 @@ public class MainFrame extends JFrame {
         Action frictionOffAction = new AbstractAction("Выключить трение"){
             @Override
             public void actionPerformed(ActionEvent e) {
-                //метод выключения трения
+                field.disableF();
                 frictionOffMenuItem.setEnabled(false);
                 frictionOnMenuItem.setEnabled(true);
             }
