@@ -18,11 +18,12 @@ public class BouncingBall implements Runnable {
 
     private double speedX;
     private double speedY;
-    private double speedXor;
-    private double speedYor;
+    private Double speedXor = null;
+    private Double speedYor = null;
     private int speed;
     private boolean fOn = false;
     private double friction;
+    private boolean isF = false;
 
     public BouncingBall(Field field, double friction){
         this.field = field;
@@ -66,9 +67,43 @@ public class BouncingBall implements Runnable {
         try{
             while(true){
                 if (fOn){
-                    
+                    isF = true;
+                    field.canMove(this);
+                    if (x + speedX <= radius) {
+                        speedX = -speedX;
+                        x = radius;
+                    } else if (x + speedX >= field.getWidth() - radius) {
+                        speedX = -speedX;
+                        x = new Double(field.getWidth() - radius).intValue();
+                    } else if (y + speedY <= radius) {
+                        speedY = -speedY;
+                        y = radius;
+                    } else if (y + speedY >= field.getHeight() - radius) {
+                        speedY = -speedY;
+                        y = new Double(field.getHeight() - radius).intValue();
+                    } else {
+                        speedX = speedX*friction;
+                        speedY = speedY*friction;
+                        x += speedX;
+                        y += speedY;
+                    }
                 }
                 else {
+                    if (isF) {
+                        if (Math.signum(speedX) != Math.signum(speedXor)) {
+                            speedX = -speedXor;
+                        }
+                        else {
+                            speedX = speedXor;
+                        }
+                        if (Math.signum(speedY) != Math.signum(speedYor)) {
+                            speedY = -speedYor;
+                        }
+                        else{
+                            speedY = speedYor;
+                        }
+                        isF = false;
+                    }
                     field.canMove(this);
                     if (x + speedX <= radius) {
                         speedX = -speedX;
