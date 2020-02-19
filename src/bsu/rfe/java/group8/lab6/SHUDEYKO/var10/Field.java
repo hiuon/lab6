@@ -25,19 +25,23 @@ public class Field extends JPanel {
         repaintTimer.start();
     }
 
+    public double getFriction(){
+        return friction;
+    }
+
     public void setFriction(double F){
         this.friction = F;
     }
 
     public void enableF(){
         for (BouncingBall ball : balls){
-            ball.setFriction(true);
+            ball.setFriction(true, friction);
         }
     }
 
     public void disableF(){
         for (BouncingBall ball : balls){
-            ball.setFriction(false);
+            ball.setFriction(false, friction);
         }
     }
 

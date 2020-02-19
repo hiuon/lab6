@@ -39,6 +39,16 @@ public class MainFrame extends JFrame {
         };
         menuBar.add(ballMenu);
         ballMenu.add(addBallAction);
+        JMenu frictionMenu = new JMenu("Трение");
+        Action setFriction = new AbstractAction("Установить трение") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String check = (String)JOptionPane.showInputDialog("Установите значение трения");
+                field.setFriction(Double.parseDouble(check));
+            }
+        };
+        menuBar.add(frictionMenu);
+        frictionMenu.add(setFriction);
         JMenu controlMenu = new JMenu("Управление");
         menuBar.add(controlMenu);
         Action frictionOnAction = new AbstractAction("Включить трение"){
@@ -83,11 +93,7 @@ public class MainFrame extends JFrame {
     }
 
     public static void main(String[] args){
-        String friction = "";
-        if (args.length != 0){
-            friction = args[0];
-        }
-
+        String friction = "1";
         MainFrame frame = new MainFrame(friction);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);

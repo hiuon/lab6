@@ -47,8 +47,8 @@ public class BouncingBall implements Runnable {
 
     }
 
-    public void setFriction(boolean F){
-        fOn = F;
+    public void setFriction(boolean F, double fric){
+        fOn = F; friction = fric;
     }
 
     public void paint(Graphics2D canvas) {
