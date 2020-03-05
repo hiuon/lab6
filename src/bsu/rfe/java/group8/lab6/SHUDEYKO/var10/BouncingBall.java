@@ -24,9 +24,29 @@ public class BouncingBall implements Runnable {
     private boolean fOn = false;
     private double friction;
     private boolean isF = false;
+    private boolean isR = false;
 
-    public BouncingBall(Field field, double friction){
+    public void stop(){
+        isR = true;
+        speedYor = speedY;
+        speedXor = speedX;
+        speedX = 0;
+        speedY = 0;
+    }
+
+    public void resumeR(){
+        isR = false;
+        speedX = speedXor;
+        speedY = speedYor;
+    }
+
+    public Color getColor(){
+        return color;
+    }
+
+    public BouncingBall(Field field, double friction, boolean fOn){
         this.field = field;
+        this.fOn = fOn;
         this.friction = friction;
         this.radius = new Double(Math.random()*(MAX_RADIUS-MIN_RADIUS)).intValue() + MIN_RADIUS;
         this.speed = new Double(Math.round(5*MAX_SPEED/radius)).intValue();
@@ -65,64 +85,63 @@ public class BouncingBall implements Runnable {
     @Override
     public void run() {
         try{
-            while(true){
-                if (fOn){
-                    isF = true;
-                    field.canMove(this);
-                    if (x + speedX <= radius) {
-                        speedX = -speedX;
-                        x = radius;
-                    } else if (x + speedX >= field.getWidth() - radius) {
-                        speedX = -speedX;
-                        x = new Double(field.getWidth() - radius).intValue();
-                    } else if (y + speedY <= radius) {
-                        speedY = -speedY;
-                        y = radius;
-                    } else if (y + speedY >= field.getHeight() - radius) {
-                        speedY = -speedY;
-                        y = new Double(field.getHeight() - radius).intValue();
+            if(isR!=true) {
+                while (true) {
+                    if (fOn) {
+                        isF = true;
+                        field.canMove(this);
+                        if (x + speedX <= radius) {
+                            speedX = -speedX;
+                            x = radius;
+                        } else if (x + speedX >= field.getWidth() - radius) {
+                            speedX = -speedX;
+                            x = new Double(field.getWidth() - radius).intValue();
+                        } else if (y + speedY <= radius) {
+                            speedY = -speedY;
+                            y = radius;
+                        } else if (y + speedY >= field.getHeight() - radius) {
+                            speedY = -speedY;
+                            y = new Double(field.getHeight() - radius).intValue();
+                        } else {
+                            speedX = speedX * friction;
+                            speedY = speedY * friction;
+                            x += speedX;
+                            y += speedY;
+                        }
                     } else {
-                        speedX = speedX*friction;
-                        speedY = speedY*friction;
-                        x += speedX;
-                        y += speedY;
+                        if (isF) {
+                            if (Math.signum(speedX) != Math.signum(speedXor)) {
+                                speedX = -speedXor;
+                            } else {
+                                speedX = speedXor;
+                            }
+                            if (Math.signum(speedY) != Math.signum(speedYor)) {
+                                speedY = -speedYor;
+                            } else {
+                                speedY = speedYor;
+                            }
+                            isF = false;
+                        }
+                        field.canMove(this);
+                        if (x + speedX <= radius) {
+                            speedX = -speedX;
+                            x = radius;
+                        } else if (x + speedX >= field.getWidth() - radius) {
+                            speedX = -speedX;
+                            x = new Double(field.getWidth() - radius).intValue();
+                        } else if (y + speedY <= radius) {
+                            speedY = -speedY;
+                            y = radius;
+                        } else if (y + speedY >= field.getHeight() - radius) {
+                            speedY = -speedY;
+                            y = new Double(field.getHeight() - radius).intValue();
+                        } else {
+                            x += speedX;
+                            y += speedY;
+                        }
                     }
+                    Thread.sleep(16 - speed);
                 }
-                else {
-                    if (isF) {
-                        if (Math.signum(speedX) != Math.signum(speedXor)) {
-                            speedX = -speedXor;
-                        }
-                        else {
-                            speedX = speedXor;
-                        }
-                        if (Math.signum(speedY) != Math.signum(speedYor)) {
-                            speedY = -speedYor;
-                        }
-                        else{
-                            speedY = speedYor;
-                        }
-                        isF = false;
-                    }
-                    field.canMove(this);
-                    if (x + speedX <= radius) {
-                        speedX = -speedX;
-                        x = radius;
-                    } else if (x + speedX >= field.getWidth() - radius) {
-                        speedX = -speedX;
-                        x = new Double(field.getWidth() - radius).intValue();
-                    } else if (y + speedY <= radius) {
-                        speedY = -speedY;
-                        y = radius;
-                    } else if (y + speedY >= field.getHeight() - radius) {
-                        speedY = -speedY;
-                        y = new Double(field.getHeight() - radius).intValue();
-                    } else {
-                        x += speedX;
-                        y += speedY;
-                    }
-                }
-                Thread.sleep(16 - speed);
             }
         } catch (InterruptedException ex){
 

@@ -12,6 +12,8 @@ public class MainFrame extends JFrame {
     private JMenuItem resumeMenuItem;
     private JMenuItem frictionOnMenuItem;
     private JMenuItem frictionOffMenuItem;
+    private JMenuItem offRedMenuItem;
+    private JMenuItem onRedMenuItem;
 
     private Field field = new Field();
 
@@ -35,6 +37,9 @@ public class MainFrame extends JFrame {
                 if (!frictionOffMenuItem.isEnabled() && !frictionOnMenuItem.isEnabled()) {
                     frictionOnMenuItem.setEnabled(true);
                 }
+                if(!onRedMenuItem.isEnabled() && !offRedMenuItem.isEnabled()){
+                    offRedMenuItem.setEnabled(true);
+                }
             }
         };
         menuBar.add(ballMenu);
@@ -49,6 +54,7 @@ public class MainFrame extends JFrame {
         };
         menuBar.add(frictionMenu);
         frictionMenu.add(setFriction);
+
         JMenu controlMenu = new JMenu("Управление");
         menuBar.add(controlMenu);
         Action frictionOnAction = new AbstractAction("Включить трение"){
@@ -89,6 +95,28 @@ public class MainFrame extends JFrame {
         };
         resumeMenuItem = controlMenu.add(resumeAction);
         resumeMenuItem.setEnabled(false);
+        Action stopRedAction = new AbstractAction("Остановить движениe красных шаров") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                field.stopRed();
+                offRedMenuItem.setEnabled(false);
+                onRedMenuItem.setEnabled(true);
+
+            }
+        };
+        offRedMenuItem = controlMenu.add(stopRedAction);
+        offRedMenuItem.setEnabled(false);
+
+        Action resumeRedAction = new AbstractAction("Возобновить движениe красных шаров") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                field.resumeRed();
+                onRedMenuItem.setEnabled(false);
+                offRedMenuItem.setEnabled(true);
+            }
+        };
+        onRedMenuItem = controlMenu.add(resumeRedAction);
+        onRedMenuItem.setEnabled(false);
         getContentPane().add(field, BorderLayout.CENTER);
     }
 

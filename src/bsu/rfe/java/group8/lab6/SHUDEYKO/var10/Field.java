@@ -31,10 +31,35 @@ public class Field extends JPanel {
 
     public void setFriction(double F){
         this.friction = F;
+        if ((int)F == 1){
+            fOn = false;
+        }
+        else{
+            fOn = true;
+        }
+    }
+
+    public synchronized void stopRed(){
+        for (BouncingBall ball : balls){
+            Color check = ball.getColor();
+            if (check.getRed()>check.getBlue()+check.getGreen()){
+                ball.stop();
+            }
+        }
+    }
+
+    public synchronized void resumeRed(){
+        for (BouncingBall ball : balls){
+            Color check = ball.getColor();
+            if (check.getRed()>check.getBlue()+check.getGreen()){
+                ball.resumeR();
+            }
+        }
     }
 
     public void enableF(){
         for (BouncingBall ball : balls){
+
             ball.setFriction(true, friction);
         }
     }
@@ -54,7 +79,7 @@ public class Field extends JPanel {
     }
 
     public void addBall() {
-        balls.add(new BouncingBall(this, friction));
+        balls.add(new BouncingBall(this, friction, fOn));
     }
 
     public synchronized void pause(){
